@@ -24,7 +24,7 @@
       <bpmn:outgoing>flow-approve</bpmn:outgoing>
       <bpmn:outgoing>flow-reject</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="payment-processing" name="Process Payment">
+    <bpmn:serviceTask id="payment-processing" name="Process Payment Enhancement">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="payment-processor" />
         <zeebe:ioMapping>
