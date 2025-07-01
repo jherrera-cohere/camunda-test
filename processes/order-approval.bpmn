@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:zeebe="http://camunda.org/schema/zeebe/1.0"
+                  id="OrderApprovalProcess" 
+                  targetNamespace="http://camunda.org/schema/1.0/bpmn">
+  
+  <bpmn:process id="order-approval-process" name="Order Approval" isExecutable="true">
+    <bpmn:startEvent id="start-event" name="Order Received">
+      <bpmn:outgoing>flow-to-review</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <!-- CONFLICTS WILL OCCUR HERE -->
+    <bpmn:userTask id="review-order" name="Review Order">
+      <bpmn:extensionElements>
+        <zeebe:assignmentDefinition assignee="reviewer" />
+        <zeebe:ioMapping>
+          <zeebe:input source="= orderId" target="orderNumber" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>flow-to-review</bpmn:incoming>
+      <bpmn:outgoing>flow-to-decision</bpmn:outgoing>
+    </bpmn:userTask>
+    
+    <bpmn:exclusiveGateway id="approval-gateway" name="Approved?">
+      <bpmn:incoming>flow-to-decision</bpmn:incoming>
+      <bpmn:outgoing>flow-approve</bpmn:outgoing>
+      <bpmn:outgoing>flow-reject</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <bpmn:endEvent id="end-approved" name="Order Approved">
+      <bpmn:incoming>flow-approve</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <bpmn:endEvent id="end-rejected" name="Order Rejected">
+      <bpmn:incoming>flow-reject</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="flow-to-review" sourceRef="start-event" targetRef="review-order" />
+    <bpmn:sequenceFlow id="flow-to-decision" sourceRef="review-order" targetRef="approval-gateway" />
+    <bpmn:sequenceFlow id="flow-approve" sourceRef="approval-gateway" targetRef="end-approved">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= approved = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="flow-reject" sourceRef="approval-gateway" targetRef="end-rejected">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= approved = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+</bpmn:definitions>
