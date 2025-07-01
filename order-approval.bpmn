@@ -109,6 +109,15 @@
           <dc:Bounds x="426" y="180" width="15" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow_5x4i8cy_di" bpmnElement="flow-reject">
+        <di:waypoint x="420" y="145" />
+        <di:waypoint x="420" y="220" />
+        <di:waypoint x="502" y="220" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="426" y="180" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
